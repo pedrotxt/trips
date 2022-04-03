@@ -1,0 +1,30 @@
+instalar react-router-dom
+npm install react-router-dom
+
+criar um arquivo de configuração de rotas - routes.js
+Switch - um componente por rota
+Route - criamos nossas proprias rotas
+
+criar uma api fake com essa biblioteca
+npm install -g json-server
+para rodar o servidor:
+json-server server.json -p 3333
+
+instalar o axios para consumir a api na aplicação
+npm install axios
+services
+
+instalar biblioteca de icon
+npm install react-icons
+
+instalando biblioteca javascript redux
+um é o proprio redux e o outro react integração com react e redux
+npm install redux react-redux
+tudo referente ao redux vai ficar na store
+
+instalar biblioteca immer
+npm install immer
+
+instalar biblioteca redux saga
+npm install redux-saga
+quem vai receber não vai ser mais o reducer e sim o saga, por isso não precisa passar a triple inteira e somente o id, pois é so o id que precisa para o saga fazer a requisição de todas as informações da api
