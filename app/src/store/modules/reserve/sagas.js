@@ -23,12 +23,29 @@ function* addToReserve({id}){
     state => state.reserve.find(trip => trip.id === id)
   );
 
-  // Aumenta a quantidade se ja existe uma reserve e ele quer ter mais
-  if(tripExists){
-    
-    const quantidade = tripExists.quantidade + 1;
+  // fazendo verificação do estoque das viagens
+  // fazendo a requisição e tendo acesso ao id e ao amount(quantidade)
+  const myStock = yield call(api.get, `stock/${id}`);
 
-    yield put(updateAmountReserve(id, quantidade));
+  // colocando a quantidade de vagas disponiveis nessa const
+  const stockAmount = myStock.data.amount;
+
+  // verificando se essa viagem existe, se existe pegar a quantidade que temos dentro da nossa lista
+  // se não existe, quer dizer que não tem esse id na lista e ele começa com 0
+  const currentStock = tripExists ? tripExists.quantidade : 0;
+
+  // somando para sempre ter valor atual de vagas
+  const amount = currentStock + 1;
+
+  // se valor atual de vagas for maior a quantidade de vagas disponivel não pode passar
+  if(amount > stockAmount){
+    alert('Quantidade maxima atingida!');
+    return;
+  }
+  
+  // se a quantidade atual de vagas ainda for menor que vagas disponiveis então adiciona mais 1 toda vez que chamar essa action e vai seguir aqui para baixo e fazer a adição e etc..
+  if(tripExists){
+    yield put(updateAmountReserve(id, amount));
 
   } else {
     // se ainda não tiver esse item clicado na lista, ele vai chamar a api e adicionar na lista
