@@ -1,5 +1,10 @@
 import React, {useState, useEffect} from 'react';
 
+// reponsavel por disparar uma ação pro redux
+import { useDispatch } from 'react-redux';
+
+import { addReserve } from '../../store/modules/reserve/actions';
+
 import {MdFlightTakeoff} from 'react-icons/md';
 
 import './style.css';
@@ -8,6 +13,9 @@ import api from '../../services/api';
 
 
 export default function Home() {
+
+  const dispatch = useDispatch();
+  
   const [trips, setTrips] = useState([]);
   
   useEffect(()=>{
@@ -23,6 +31,12 @@ export default function Home() {
 
   }, []);
 
+  // onClick vai receber o objeto inteiro com todas informações (trip)
+  function handleAdd(trip){
+    // disparando uma ação para nosso redux
+    dispatch(addReserve(trip));
+  }
+
   // renderização condicional no status
  return (
    <div>
@@ -35,7 +49,7 @@ export default function Home() {
 
            <button
             type='button'
-            onClick={ ()=>{} }
+            onClick={ ()=> handleAdd(trip) }
            >
              <div>
                <MdFlightTakeoff size={16} color='#FFF' />

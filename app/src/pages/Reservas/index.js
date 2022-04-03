@@ -1,28 +1,65 @@
 import React from 'react';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { removeReserve, updateAmountReserve } from '../../store/modules/reserve/actions';
+
 import './style.css';
 
-import {MdDelete} from 'react-icons/md';
+import { MdDelete, MdAddCircle, MdRemoveCircle } from 'react-icons/md';
 
 export default function Reservas() {
+
+  const dispatch = useDispatch();
+
+  const reserves = useSelector(state => state.reserve)
+
+  function handleDelete(id){
+    dispatch(removeReserve(id));
+  }
+
+  function decrementAmount(trip){
+    dispatch(updateAmountReserve(trip.id, trip.quantidade - 1));
+  }
+
+  function incrementAmount(trip){
+    dispatch(updateAmountReserve(trip.id, trip.quantidade + 1));
+  }
+
  return (
    <div>
-     <h1 className='title'>Você solicitou 1 reservas</h1>
+     <h1 className='title'>Você solicitou {reserves.length} reservas</h1>
 
-     <div className='reservas'>
-       <img 
-        src="https://sujeitoprogramador.com/wp-content/uploads/2019/12/maceio.jpg"
-        alt='Maceio'
-       />
+      {reserves.map(reserve => (
+        <div className='reservas' key={reserve.id}>
 
-       <strong>Viagem Maceio 7 dias</strong>
-       <span>Quantidade: 2</span>
-       <button
-        type='button'
-        onClick={ ()=> {} }
-       >
-         <MdDelete size={20} color= '#191919' />
-       </button>
-     </div>
+          <img 
+          src={reserve.image}
+          alt={reserve.title}
+          />
+  
+          <strong>{reserve.title}</strong>
+
+          <div id='quantidade'>
+
+            <button type='button' onClick={ ()=> decrementAmount(reserve) }> <MdRemoveCircle size={25} color='#191919' /></button>
+
+              <input type='text' readOnly value={reserve.quantidade}></input>
+
+            <button type='button' onClick={ ()=> incrementAmount() }> <MdAddCircle size={25} color='#191919' /></button>
+
+          </div>
+
+          {/* passando qual id ele ta clicando no onClick */}
+          <button
+          type='button'
+          onClick={ ()=> handleDelete(reserve.id) }
+          >
+            <MdDelete size={20} color= '#191919' />
+          </button>
+
+        </div>
+      ))}
+     
 
      <footer>
        <button type='button'>Solicitar Reservas</button>
