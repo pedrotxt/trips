@@ -7,7 +7,7 @@ export default function reserve( state = [], action){
   // o onclick da Home vai disparar uma ação pro redux com o respectivo type e também levando o que eu passei para essa ação, e quando ele chega no nosso reducer, vai verificar qual é a ação com action.type e depois retornar algo, caso não seja a action buscada retorna a state vazia por padrão
   // a action tem acesso ao type de todos nossos reducer
   switch(action.type){
-    case 'ADD_RESERVA':
+    case 'ADD_RESERVA_SUCESS':
       // pegando tudo que ja tem no array e adicionando um objeto com uma nova trip a cada ação e uma quantidade
 
       // return [ ...state, {
