@@ -1,22 +1,50 @@
 // Redux Saga
 
+// select conseguimos trazer todo nosso state
 // não podemos fazer dentro do saga requisições http igual fazia, para isso precisamos importar do redux saga o metodo call
-import { call, put, all, takeLatest } from 'redux-saga/effects';
+import { select, call, put, all, takeLatest } from 'redux-saga/effects';
 
 // pegando nossas actions
-import { addReserveSuccess } from './actions';
+import { addReserveSuccess, updateAmountReserve } from './actions';
 
 // importando api para fazer requisições
 import api from '../../../services/api';
 
+
+
 // * - generator (tem a mesma função de esperar uma requisição para proseguir do async/await)
 function* addToReserve({id}){
+
   // yield funciona como se fosse o await
   // redux saga é um middler - ex: quando solicitar uma reserva, iria disparar uma action, saga vai receber essa action, fazer a requisição e em algum momento o saga poderia disparar uma action pro reducer e o reducer iria mostrar as informações completas da api
-  const response = yield call(api.get, `trips/${id}`);
 
-  // disparar actions do redux saga com put para nosso reduce
-  yield put(addReserveSuccess(response.data));
+  const tripExists = yield select(
+    // verificando se o item ja existe na minha lista
+    state => state.reserve.find(trip => trip.id === id)
+  );
+
+  // Aumenta a quantidade se ja existe uma reserve e ele quer ter mais
+  if(tripExists){
+    
+    const quantidade = tripExists.quantidade + 1;
+
+    yield put(updateAmountReserve(id, quantidade));
+
+  } else {
+    // se ainda não tiver esse item clicado na lista, ele vai chamar a api e adicionar na lista
+    const response = yield call(api.get, `trips/${id}`);
+
+    const data = {
+      ...response.data,
+      quantidade: 1
+    };
+
+    // disparar actions do redux saga com put para nosso reduce
+    yield put(addReserveSuccess(data));
+  }
+
+  
+  
 }
 
 // metodo all: listeners - vai ficar ouvindo

@@ -23,6 +23,7 @@ export default function Reservas() {
 
   function incrementAmount(trip){
     dispatch(updateAmountReserve(trip.id, trip.quantidade + 1));
+   
   }
 
  return (
@@ -45,7 +46,7 @@ export default function Reservas() {
 
               <input type='text' readOnly value={reserve.quantidade}></input>
 
-            <button type='button' onClick={ ()=> incrementAmount() }> <MdAddCircle size={25} color='#191919' /></button>
+            <button type='button' onClick={ ()=> incrementAmount(reserve) }> <MdAddCircle size={25} color='#191919' /></button>
 
           </div>
 

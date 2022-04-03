@@ -17,19 +17,23 @@ export default function reserve( state = [], action){
 
       // primeiro a state original depois a copia(draft) que vai ter acesso a toda nossa state original, assim podemos manipular o valor que tem na nossa state no draft
       return produce(state, draft =>{
-        // const tripIndex: procura por algum index onde o trip.id é igual ao action.trip.id (se existir um index do objeto que for igual ao index desse mesmo objeto salvo na action, quer dizer que ele ja mandou esse objeto para action alguma vez, então a resposta dentro da constante vai ser esse index, e caso não tenha nenhuma action ainda com esse id a resposta vai ser -1)
-        const tripIndex = draft.findIndex(trip => trip.id === action.trip.id);
 
+        draft.push(action.trip);
+
+        // Sem o redux saga:
+        //
+        // const tripIndex: procura por algum index onde o trip.id é igual ao action.trip.id (se existir um index do objeto que for igual ao index desse mesmo objeto salvo na action, quer dizer que ele ja mandou esse objeto para action alguma vez, então a resposta dentro da constante vai ser esse index, e caso não tenha nenhuma action ainda com esse id a resposta vai ser -1)
+        // const tripIndex = draft.findIndex(trip => trip.id === action.trip.id);
         // se tiver um item repetido (quando não tem é -1), pegue o index dessa state/draft e adicione a quantidade +1 para ele
-        if(tripIndex >= 0) {
-          draft[tripIndex].quantidade += 1;
-        } else {
-          // se não tiver esse item na nossa lista adiciona normalmente
-          draft.push({
-            ...action.trip,
-            quantidade: 1,
-          });
-        }
+        // if(tripIndex >= 0) {
+        //   draft[tripIndex].quantidade += 1;
+        // } else {
+        //   // se não tiver esse item na nossa lista adiciona normalmente
+        //   draft.push({
+        //     ...action.trip,
+        //     quantidade: 1,
+        //   });
+        // }
       });
 
     case 'REMOVE_RESERVE':
@@ -56,7 +60,7 @@ export default function reserve( state = [], action){
 
         if(tripIndex >= 0){
           // localizando o produto e vendo a quantidade que ja ta dentro dele e substituo pelo o que estou mandando na minha action (se é +1, -1)          
-          draft[tripIndex].quantidade = Number(action.quantidade)
+          draft[tripIndex].quantidade = Number(action.quantidade);
         }
       });
 
