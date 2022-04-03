@@ -12,7 +12,7 @@ export default function reserve( state = [], action){
 
       // return [ ...state, {
       //   ...action.trip,
-      //   quantidade: 1,
+      //   amount: 1,
       // } ];
 
       // primeiro a state original depois a copia(draft) que vai ter acesso a toda nossa state original, assim podemos manipular o valor que tem na nossa state no draft
@@ -26,12 +26,12 @@ export default function reserve( state = [], action){
         // const tripIndex = draft.findIndex(trip => trip.id === action.trip.id);
         // se tiver um item repetido (quando não tem é -1), pegue o index dessa state/draft e adicione a quantidade +1 para ele
         // if(tripIndex >= 0) {
-        //   draft[tripIndex].quantidade += 1;
+        //   draft[tripIndex].amount += 1;
         // } else {
         //   // se não tiver esse item na nossa lista adiciona normalmente
         //   draft.push({
         //     ...action.trip,
-        //     quantidade: 1,
+        //     amount: 1,
         //   });
         // }
       });
@@ -48,19 +48,14 @@ export default function reserve( state = [], action){
         }
       });
 
-    case 'UPDATE_RESERVE':
-      
-      if(action.quantidade <= 0) {
-        return state;
-      }
-
+    case 'UPDATE_RESERVE_SUCCESS':
       return produce(state, draft =>{
         // buscando qual produto ele clicou
         const tripIndex = draft.findIndex(trip => trip.id === action.id);
 
         if(tripIndex >= 0){
           // localizando o produto e vendo a quantidade que ja ta dentro dele e substituo pelo o que estou mandando na minha action (se é +1, -1)          
-          draft[tripIndex].quantidade = Number(action.quantidade);
+          draft[tripIndex].amount= Number(action.amount);
         }
       });
 

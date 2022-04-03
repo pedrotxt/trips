@@ -5,7 +5,7 @@
 import { select, call, put, all, takeLatest } from 'redux-saga/effects';
 
 // pegando nossas actions
-import { addReserveSuccess, updateAmountReserve } from './actions';
+import { addReserveSuccess, updateAmountSuccess } from './actions';
 
 // importando api para fazer requisições
 import api from '../../../services/api';
@@ -32,7 +32,7 @@ function* addToReserve({id}){
 
   // verificando se essa viagem existe, se existe pegar a quantidade que temos dentro da nossa lista
   // se não existe, quer dizer que não tem esse id na lista e ele começa com 0
-  const currentStock = tripExists ? tripExists.quantidade : 0;
+  const currentStock = tripExists ? tripExists.amount : 0;
 
   // somando para sempre ter valor atual de vagas
   const amount = currentStock + 1;
@@ -45,7 +45,7 @@ function* addToReserve({id}){
   
   // se a quantidade atual de vagas ainda for menor que vagas disponiveis então adiciona mais 1 toda vez que chamar essa action e vai seguir aqui para baixo e fazer a adição e etc..
   if(tripExists){
-    yield put(updateAmountReserve(id, amount));
+    yield put(updateAmountSuccess(id, amount));
 
   } else {
     // se ainda não tiver esse item clicado na lista, ele vai chamar a api e adicionar na lista
@@ -53,19 +53,37 @@ function* addToReserve({id}){
 
     const data = {
       ...response.data,
-      quantidade: 1
+      amount: 1
     };
 
     // disparar actions do redux saga com put para nosso reduce
     yield put(addReserveSuccess(data));
+
+ 
+
+  }
+  
+}
+
+function* updateAmount({ id, amount }){
+  if(amount <=0 ) return;
+
+  const myStock = yield call(api.get, `stock/${id}`);
+
+  const stockAmount = myStock.data.amount;
+
+  if(amount > stockAmount){
+    alert('Quantidade maxima atingida.');
+    return;
   }
 
-  
-  
+  yield put(updateAmountSuccess(id, amount));
+
 }
 
 // metodo all: listeners - vai ficar ouvindo
 export default all([
   // metodo takeLatest: ex: fazendo varias requisições(clicou 2 vezes muito rapido) - no takeLatest se ele ainda tiver terminando ainda a primeira requisição ele so vai executar a ultima requisição(no caso a do 2 clique)
-  takeLatest('ADD_RESERVA_REQUEST', addToReserve)
+  takeLatest('ADD_RESERVA_REQUEST', addToReserve),
+  takeLatest('UPDATE_RESERVE_REQUEST', updateAmount)
 ]);

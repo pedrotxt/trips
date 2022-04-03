@@ -18,8 +18,6 @@ export function addReserveRequest(id){
     })
 }
 
-
-
 export function removeReserve(id){
   return(
     {
@@ -28,11 +26,20 @@ export function removeReserve(id){
     })
 }
 
-export function updateAmountReserve(id, quantidade){
+// ouvida pelo saga, e quando ele fizer sua requisição e tiver tudo certo, vamos chamar a action sucess e quem vai estar ouvindo a sucess é o nosso reducer
+export function updateAmountRequest(id, amount){
   return( 
     {
-      type: 'UPDATE_RESERVE',
+      type: 'UPDATE_RESERVE_REQUEST',
       id,
-      quantidade
+      amount
+    })
+}
+export function updateAmountSuccess(id, amount){
+  return( 
+    {
+      type: 'UPDATE_RESERVE_SUCCESS',
+      id,
+      amount
     })
 }
